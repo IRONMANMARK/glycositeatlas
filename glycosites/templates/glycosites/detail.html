@@ -1,0 +1,48 @@
+{% extends "registration/registration_base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Detail" %}{% endblock %}
+{% block content %}
+<table id="table_id" class="display">
+        <thead>
+            <tr>
+                <th>UniProt Accession</th>
+                <th>Reviewed</th>
+                <th>Gene Names</th>
+                <th>Protein Names</th>
+                <th>Glycosites</th>
+                <th>N-Glycopeptides</th>
+                <th>Glycosites_+/-20AAs</th>
+                <th>Identification Resources</th>
+                <th>Years</th>
+                <th>References</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% if record_list %}
+
+        {% for record in record_list %}
+            <tr>
+                <td align="center"><a href="/glycosites/{{ accession.id }}/">{{ record.accession_uniprotkb }}</a></td>
+                <td>{{record.database}}</td>
+                <td align="center">{{record.gene_names}}</td>
+                <td align="center">{{record.protein_names}}</td>
+                <td align="center">{{record.glycosylation_location}}</td>
+
+                <td>{{record.glycosites_containing_peptides}}</td>
+                <td>{{record.glycosite_aas}}</td>
+                <td>{{record.identification_resources}}</td>
+                <td>{{record.years}}</td>
+                <td>{{record.references}}</td>
+
+            </tr>
+        {% endfor %}
+        {% else %}
+        <tr>
+            <td>NULL</td>
+            <td>NULL</td>
+        </tr>
+        {% endif %}
+        </tbody>
+    </table>
+{% endblock %}

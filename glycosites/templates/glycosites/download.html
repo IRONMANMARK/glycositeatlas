@@ -1,0 +1,223 @@
+{% extends "registration/registration_base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "GlycositeAtlas:Download" %}{% endblock %}
+{% block content %}
+    <div class="row">
+        <div class="col-md-1">
+        </div>
+        <div class="col-md-5">
+            <h3>Download All</h3>
+        </div>
+        <div class="col-md-5" align="right">
+            Update Date: 2016-03-24
+        </div>
+        <div class="col-md-1" align="right">
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-1"></div>
+        <div class="col-md-10">
+            <table class="table" width="90%">
+                <thead>
+                <th>Name</th>
+                <th>Glycoylation sites</th>
+                <th>Glycoproteins</th>
+                <th>Glycosite-containing peptides</th>
+                </thead>
+                <tr class="info">
+                    <td><a href="/download/HumanAll/">All human N-linked glycoproteins and glycosites</a></td>
+                    <td>14,644</td>
+                    <td>7,204</td>
+                    <td>30,872</td>
+                </tr>
+            </table>
+            <h3>Download by Tissue/Body Fluids</h3>
+            <table class="table" width="90%">
+                <thead>
+                <th>Name</th>
+
+                <th>Glycoylation sites</th>
+                <th>Glycoproteins</th>
+                <th>Glycosite-containing peptides</th>
+                </thead>
+                <tbody>
+
+                <tr class="warning">
+                    <td><a href="/download/Prostate/">Prostate</a></td>
+                    <td>6,200</td>
+                    <td>3,265</td>
+                    <td>6,640</td>
+
+                </tr>
+                <tr class="warning">
+                    <td><a href="/download/Liver/">Liver</a></td>
+                    <td>5,833</td>
+                    <td>2,483</td>
+                    <td>15,821</td>
+
+                </tr>
+                <tr class="warning">
+                    <td><a href="/download/Ovary/">Ovary</a></td>
+                    <td>5,672</td>
+                    <td>2,617</td>
+                    <td>7,346</td>
+
+                </tr>
+                <tr class="warning">
+                    <td><a href="/download/Breast/">Breast</a></td>
+                    <td>3,941</td>
+                    <td>1,893</td>
+                    <td>4,744</td>
+
+                </tr>
+                <tr class="warning">
+                    <td><a href="/download/Colon/">Colon</a></td>
+                    <td>2,080</td>
+                    <td>1,117</td>
+                    <td>2,158</td>
+
+                </tr>
+                <tr class="warning">
+                    <td><a href="/download/Pancreas/">Pancreas</a></td>
+                    <td>1,894</td>
+                    <td>1,162</td>
+                    <td>2,307</td>
+
+                </tr>
+                <tr class="warning">
+                    <td><a href="/download/Cervix/">Cervix</a></td>
+                    <td>1,275</td>
+                    <td>622</td>
+                    <td>1,326</td>
+
+                </tr>
+
+
+                <tr class="warning">
+                    <td><a href="/download/Kidney/">Kidney</a></td>
+                    <td>1,119</td>
+                    <td>621</td>
+                    <td>1,189</td>
+
+                </tr>
+                <tr class="warning">
+                    <td><a href="/download/Lung/">Lung</a></td>
+                    <td>911</td>
+                    <td>564</td>
+                    <td>1,018</td>
+
+                </tr>
+                <tr class="warning">
+                    <td><a href="/download/Spermatozoa/">Spermatozoa</a></td>
+                    <td>585</td>
+                    <td>311</td>
+                    <td>526</td>
+
+                </tr>
+                <tr class="warning">
+                    <td><a href="/download/Bladder/">Bladder</a></td>
+                    <td>315</td>
+                    <td>196</td>
+                    <td>296</td>
+
+                </tr>
+                <tr class="warning">
+                    <td><a href="/download/BoneMarrow/">Bone Marrow</a></td>
+                    <td>270</td>
+                    <td>152</td>
+                    <td>256</td>
+
+                </tr>
+                <tr class="info">
+                    <td><a href="/download/Urine/">Urine</a></td>
+                    <td>4,572</td>
+                    <td>2,645</td>
+                    <td>4,408</td>
+
+                </tr>
+                <tr class="info">
+                    <td><a href="/download/SerumOrPlasma/">Serum/Plasma</a></td>
+                    <td>3,254</td>
+                    <td>1,845</td>
+                    <td>3,553</td>
+
+                </tr>
+                <tr class="info">
+                    <td><a href="/download/Platelet/">Platelet</a></td>
+                    <td>1,455</td>
+                    <td>1,001</td>
+                    <td>1,056</td>
+
+                </tr>
+                <tr class="info">
+                    <td><a href="/download/CSF/">CSF</a></td>
+                    <td>608</td>
+                    <td>325</td>
+                    <td>560</td>
+
+                </tr>
+                <tr class="info">
+                    <td><a href="/download/Saliva/">Saliva</a></td>
+                    <td>287</td>
+                    <td>178</td>
+                    <td>277</td>
+
+                </tr>
+                <tr class="info">
+                    <td><a href="/download/Milk/">Milk</a></td>
+                    <td>63</td>
+                    <td>33</td>
+                    <td>60</td>
+
+                </tr>
+                <tr class="danger">
+                    <td><a href="/download/BCells/">B-cells</a></td>
+                    <td>2,230</td>
+                    <td>1,101</td>
+                    <td>1,966</td>
+
+                </tr>
+                <tr class="danger">
+                    <td><a href="/download/TCells/">T-cells</a></td>
+                    <td>901</td>
+                    <td>573</td>
+                    <td>901</td>
+
+                </tr>
+                <tr class="danger">
+                    <td><a href="/download/Thyroid/">Thyroid</a></td>
+                    <td>546</td>
+                    <td>264</td>
+                    <td>546</td>
+
+                </tr>
+                <tr class="danger">
+                    <td><a href="/download/PBMCMacrophageCells/">PBMC Macrophage Cells</a></td>
+                    <td>212</td>
+                    <td>141</td>
+                    <td>182</td>
+
+                </tr>
+
+
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-1"></div>
+    </div>
+
+{% endblock %}

@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>jQuery UI Dialog - Animation</title>
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+  <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+  <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+  <link rel="stylesheet" href="/resources/demos/style.css">
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Bootstrap 3, from LayoutIt!</title>
+
+  <meta name="description" content="Source code generated using layoutit.com">
+  <meta name="author" content="LayoutIt!">
+
+  <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+  <link href="/static/css/style.css" rel="stylesheet">
+
+  <script src="/static/js/scripts.js"></script>
+
+
+  <script src="/static/js/bootstrap.min.js"></script>
+
+  <script>
+  $(function(){
+    function doSearch(){
+      $("#query").submit();
+    }
+    function showValues(){
+      var str = $("#query").serialize();
+      alert(str);
+    }
+     $( "#dialog" ).dialog({
+      autoOpen: false,
+      height:300,
+      width:600,
+      modal: true,
+      buttons:{
+        "Search" : doSearch,
+        "Show" : showValues
+      }
+    });
+
+    $( "#advanced" ).click(function() {
+      $( "#dialog" ).dialog( "open" );
+
+    });
+
+    $("#submitbtn").click()
+  });
+  </script>
+  <script>
+
+    function addCondition2(){
+      $("#dialog").children().each(function(){
+        alert("init:"+$(this).attr("id"));
+      })
+      var index = $("#field:last").attr("index");
+      index = Number(index) + 1;
+      $("#field").clone().appendTo("#dialog");
+      alert($("#dialog").children().last().attr("index"));
+      $("[id='field']").last().attr("index",index);
+      alert("test"+$("[id='field']").last().attr("index"))
+      $("#term").clone().appendTo("#dialog");
+      var deletebutton = "<button type=\"button\" id=\"delbtn\" index=\"0\" class=\"myButton\" onclick=\"deleteCondition(this)\">delete</button>";
+      $("#dialog").append(deletebutton);
+      $("#dialog").children().each(function(){
+        alert("append:"+$(this).attr("id")+$(this).attr("index"));
+      })
+    }
+
+    function addCondition(){
+      var index = $("[id='condition']").last().attr("condition_index");
+      index =  Number(index) + 1;
+      $("#condition").clone().appendTo("#conditions");
+      $("[id='condition']").last().attr("condition_index",index);
+      $("[id='booloperator']").attr("style", "visibility: visible");
+      $("[id='booloperator']").first().attr("style","visibility:hidden");
+      var deletebutton = "<td><button id=\"delbtn\" delid=\"" + index + "\">delete</button></td>";
+      $("[id='condition']").last().append(deletebutton);
+
+      $("[id='delbtn']").last().click(function(){
+        var test = "[condition_index='"+index+"']";
+        $(test).remove();
+      });
+    }
+</script>
+</head>
+<body>
+
+<div id="dialog" title="Search in N-GlycositeAtlas">
+  <form id="query" action="/glycosites/query/">
+    <table id="conditions" >
+      <tr id="condition" condition_index="1" >
+        <td>
+          <select id="booloperator" style="visibility:hidden" name="bool">
+            <option value="AND">AND</option>
+            <option value="OR">OR</option>
+          </select>
+        </td>
+        <td>
+          <select id="field" name="field">
+            <option value="database">Database</option>
+            <option value="accession_uniprotkb">UniProtKB AC/ID</option>
+            <option value="gene_names">Gene</option>
+            <option value="protein_names">Protein</option>
+            <option value="glycosylation_location">Site</option>
+            <option value="glycosites_containing_peptides">Peptide</option>
+            <option value="glycosite_aas">Motif</option>
+            <option value="identification_resources">Source</option>
+            <option value="years">Year</option>
+            <option value="references">Reference</option>
+          </select>
+        </td>
+        <td>
+          <input id="term" type="text" size="10" name="term" value="Reviewed">
+        </td>
+        <td>
+          <button type="button" onclick="addCondition()">add</button>
+        </td>
+      </tr>
+    </table>
+  </form>
+</div>
+
+<img src="/static/images/JHMlogo.jpg" width="25%" max-width="100%">
+<div>
+  <div align="right">
+    <input type="text" size="40">
+    <button id="search">Search</button>
+    <button id="advanced">Advanced</button>
+  </div>
+</div>
+
+
+
+
+
+</body>
+</html>

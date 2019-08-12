@@ -1,0 +1,175 @@
+{% extends "registration/registration_base.html" %}
+{% load i18n %}
+{% load glycosite_extras %}
+{% load static %}
+
+{% block title %}{% trans "Detail" %}{% endblock %}
+{% block content %}
+{% if record_list %}
+{% for protein in uniq_protein %}
+    <style>
+    table {
+        table-layout: fixed;
+        width: 100%;
+    }
+    td {
+        {#width: 1px;#}
+        word-wrap: break-word;
+        word-break: break-word;
+        {#overflow: auto;#}
+    }
+    </style>
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-md-12">
+			<h3 class="text-danger">
+				UniProtKB-{{first_record.accession_uniprotkb}}
+			</h3>
+			<table class="table">
+				<thead>
+					<tr>
+						<th>
+
+						</th>
+						<th>
+
+						</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>
+                            Protein
+						</td>
+						<td>
+							{{first_record.protein_names}}
+						</td>
+					</tr>
+					<tr class="active">
+						<td>
+							Gene
+						</td>
+						<td>
+							{{first_record.gene_names}}
+						</td>
+					</tr>
+					<tr >
+						<td>
+							Status
+						</td>
+						<td>
+							{{first_record.database}}
+						</td>
+					</tr>
+					<tr class="active">
+						<td>
+							Source
+						</td>
+						<td>
+                            {{unique_sources}}
+						</td>
+					</tr>
+					<tr >
+						<td>
+							Years
+						</td>
+						<td>
+                            {{min_year}}-{{max_year}}
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-12">
+			<h3 class="text-danger">
+				Glycosites
+			</h3>
+			<table class="table">
+				<thead>
+					<tr>
+						<th>
+							Site
+						</th>
+						<th>
+							Identified Peptides
+						</th>
+                        <th>Year(Publication ID)</th>
+                        <th>glycan ID</th>
+                        <th>standard mass spectrum</th>
+					</tr>
+				</thead>
+				<tbody>
+                    {% for s in sites %}
+					<tr>
+						<td>
+							{{s.site}}
+						</td>
+						<td>
+                            {{s.glycopep|red:"n"}}
+						</td>
+                        <td>
+                            {% linkyear s.year s.refs %}
+                        </td>
+                        <td>
+                             {{glycan_pool|get_item:s.glycopep}}
+						</td>
+                        <td>
+{#                              <a href="{% url 'diagram' %}{{url_pool|get_item:s.glycopep}}">click here to see mass spectrum</a>#}
+                            {% if not url_pool|get_item:s.glycopep %}
+                                Mass spectrum does not exist in the database
+                            {% else %}
+                                <a href="{% static  url_pool|get_item:s.glycopep %}" target="_blank">click here to see mass spectrum</a>
+                            {% endif %}
+                        </td>
+
+					</tr>
+                    {% endfor %}
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-12">
+			<h3 class="text-danger">
+				Sequence
+			</h3>
+			<table class="table">
+				<thead>
+
+				</thead>
+				<tbody>
+					{% seqtab sequence pure_glycosites coverage %}
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-12">
+			<h3 class="text-danger">
+				Reference
+			</h3>
+			<table class="table">
+				<thead>
+					<tr>
+						<th>
+							ID
+						</th>
+						<th>
+							Publication
+						</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% pubtab references %}
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
+{% endfor %}
+{% else %}
+NULL
+{% endif %}
+{% endblock %}

@@ -1,0 +1,18 @@
+[
+  {
+    "model": "glycosites.Question",
+    "pk": 1,
+    "fields": {
+      "question_text": "John",
+      "pub_date": "2009-10-01"
+    }
+  },
+  {
+    "model": "glycosites.Question",
+    "pk": 2,
+    "fields": {
+      "question_text": "Paul",
+      "pub_date": "2010-10-01"
+    }
+  }
+]

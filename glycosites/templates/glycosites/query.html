@@ -1,0 +1,356 @@
+latest_accession_list<!DOCTYPE html>
+{% load static %}
+<html>
+<head>
+    <!--link rel="stylesheet" type="text/css" href="{% static 'DataTables/DataTables-1.10.10/css/jquery.dataTables.css' %}"/-->
+    <!--script type="text/javascript" src="{% static 'DataTables/JSZip-2.5.0/jszip.js' %}"></script-->
+    <!--script type="text/javascript" src="{% static 'DataTables/pdfmake-0.1.18/build/pdfmake.js' %}"></script-->
+    <!--script type="text/javascript" src="{% static 'DataTables/pdfmake-0.1.18/build/vfs_fonts.js' %}"></script-->
+    <!--script type="text/javascript" src="{% static 'DataTables/DataTables-1.10.10/js/jquery.dataTables.js' %}"></script-->
+    <!--script type="text/javascript" src="{% static 'DataTables/Buttons-1.1.0/js/buttons.colVis.js' %}"></script-->
+    <!--script type="text/javascript" src="{% static 'DataTables/Buttons-1.1.0/js/buttons.flash.js' %}"></script-->
+    <!--script type="text/javascript" src="{% static 'DataTables/Buttons-1.1.0/js/buttons.html5.js' %}"></script-->
+    <!--script type="text/javascript" src="{% static 'DataTables/Buttons-1.1.0/js/buttons.print.js' %}"></script-->
+    <!--script src="{% static 'DataTables/jQuery-2.1.4/jquery-2.1.4.js' %}"></script-->
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Source code template using layoutit.com">
+    <meta name="author" content="Yingwei Hu">
+
+    <title>GlycositeAtlas:Search</title>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+    <link href="https://s3-us-west-2.amazonaws.com/biomarkerdjango/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://s3-us-west-2.amazonaws.com/biomarkerdjango/css/style.css" rel="stylesheet">
+    <link href="https://s3-us-west-2.amazonaws.com/biomarkerdjango/css/bootstrap-theme.min.css" rel="stylesheet">
+    <!--
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/css/style.css" rel="stylesheet">
+    -->
+
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.10/css/jquery.dataTables.css"/>
+
+    <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.4.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/2.5.0/jszip.js"></script>
+    <script type="text/javascript" src="https://cdn.rawgit.com/bpampuch/pdfmake/0.1.18/build/pdfmake.js"></script>
+    <script type="text/javascript" src="https://cdn.rawgit.com/bpampuch/pdfmake/0.1.18/build/vfs_fonts.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.10/js/jquery.dataTables.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.1.0/js/buttons.colVis.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.1.0/js/buttons.flash.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.1.0/js/buttons.html5.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.1.0/js/buttons.print.js"></script>
+    <script src="https://s3-us-west-2.amazonaws.com/biomarkerdjango/js/bootstrap.min.js"></script>
+    <script src="https://s3-us-west-2.amazonaws.com/biomarkerdjango/glycosites/js/scripts.js"></script>
+    <!--<script src="//code.jquery.com/jquery-1.10.2.js"></script>-->
+    <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+    <!--
+    <script src="/static/js/bootstrap.min.js"></script>
+    <script src="/static/js/scripts.js"></script>
+    -->
+
+    <title>Biomarker Center of Johns Hopkins University</title>
+    <script>
+        function doSearch() {
+//				  $("#query").submit();
+            document.getElementById("query").submit();
+        }
+        function showValues() {
+            var str = $("#query").serialize();
+            alert(str);
+            $("#query").submit();
+        }
+        function addCondition() {
+            var index = $("[id='condition']").last().attr("condition_index");
+            index = Number(index) + 1;
+            $("#condition").clone().appendTo("#conditions");
+            $("[id='condition']").last().attr("condition_index", index);
+            $("[id='booloperator']").attr("style", "visibility: visible");
+            $("[id='booloperator']").first().attr("style", "visibility:hidden");
+            var deletebutton = "<td><button type=\"button\" id=\"delbtn\" delid=\"" + index + "\">delete</button></td>";
+            $("[id='condition']").last().append(deletebutton);
+
+            $("[id='delbtn']").last().click(function () {
+                var row = "[condition_index='" + index + "']";
+                $(row).remove();
+            });
+
+        }
+
+        $(document).ready(function () {
+            var dialog, form, rdialog;
+            dialog = $("#dialog").dialog({
+                autoOpen: false,
+                height: 300,
+                width: 600,
+                modal: true,
+                buttons: {
+                    Search: function () {
+                        doSearch()
+                    },
+//					  "Show" : showValues
+                    Cancel: function () {
+                        dialog.dialog("close");
+                    }
+                },
+                close: function () {
+                    document.getElementById("query").reset();
+//					  allFields.removeClass( "ui-state-error" );
+                }
+            });
+
+            $("#advanced").click(function () {
+                $("#dialog").dialog("open");
+
+            });
+
+
+            $('#table_id').DataTable();
+
+
+        });
+
+
+    </script>
+
+</head>
+<body>
+
+<div data-role="popup" id="dialog" title="Search in N-GlycositeAtlas">
+    <form id="query" action="/glycosites/query/">
+        <table id="conditions">
+            <tr id="condition" condition_index="1">
+                <td>
+                    <select id="booloperator" style="visibility:hidden" name="bool">
+                        <option value="AND">AND</option>
+                        <option value="OR">OR</option>
+                    </select>
+                    &nbsp;
+                </td>
+                <td>
+                    <select id="field" name="field">
+                        <option value="database">Database</option>
+                        <option value="accession_uniprotkb">UniProtKB AC/ID</option>
+                        <option value="gene_names">Gene</option>
+                        <option value="protein_names">Protein</option>
+                        <option value="glycosylation_location">Site</option>
+                        <option value="glycosites_containing_peptides">Peptide</option>
+                        <option value="glycosite_aas">Motif</option>
+                        <option value="identification_resources">Source</option>
+                        <option value="years">Year</option>
+                        <option value="references">Reference</option>
+                    </select>
+                    &nbsp;&nbsp;
+                </td>
+                <td>
+                    Contains
+                    &nbsp;&nbsp;
+                </td>
+                <td>
+                    <input id="term" type="text" size="10" name="term" value="Reviewed">
+                    &nbsp;&nbsp;
+                </td>
+                <td>
+                    <button type="button" onclick="addCondition()">add</button>
+                </td>
+            </tr>
+        </table>
+    </form>
+</div>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <nav class="navbar navbar-default navbar-inverse" role="navigation">
+                <div class="navbar-header">
+
+                    <button type="button" class="navbar-toggle" data-toggle="collapse"
+                            data-target="#bs-example-navbar-collapse-1">
+                        <span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span
+                            class="icon-bar"></span><span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="http://www.biomarkercenter.org">BiomarkerCenter</a>
+                </div>
+
+                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                    <ul class="nav navbar-nav">
+                        <li class="active">
+                            <a href="/glycosites/">Home</a>
+                        </li>
+                        <li>
+                            <a id="advanced" href="#d">Search</a>
+                        </li>
+                        <!--<li>-->
+                        <!--<a href="/glycosites/publication">Publication</a>-->
+                        <!--</li>-->
+                        <li>
+                            <a href="/glycosites/download/">Download</a>
+                        </li>
+                        <li>
+                            <a href="/accounts/contactus/">Contact Us</a>
+                        </li>
+                    </ul>
+
+                    <ul class="nav navbar-nav navbar-right">
+                        <li>
+                            <a href="#"></a>
+                        </li>
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Account<strong
+                                    class="caret"></strong></a>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a id="login" href="/accounts/login/">Login</a>
+                                </li>
+                                <li>
+                                    <a href="#"></a>
+                                </li>
+                                <li>
+                                    <a id="logout" href="/accounts/logout/">Logout</a>
+                                </li>
+                                <!--<li class="divider">-->
+                                <!--</li>-->
+                                <!--<li>-->
+                                <!--<a id="signup" href="#">Registration</a>-->
+                                <!--</li>-->
+                            </ul>
+                        </li>
+                    </ul>
+                    <!--
+                    <ul class="nav navbar-nav navbar-left">
+                        <form class="navbar-form navbar-right" role="search">
+                            <div class="form-group">
+                                <input class="form-control" type="text">
+                            </div>
+                            <button type="submit" class="btn btn-default">
+                                Search
+                            </button>
+                        </form>
+                    </ul>
+                    -->
+                </div>
+
+            </nav>
+            <!--<nav class="navbar navbar-default" role="navigation">-->
+            <!--<div class="navbar-header">-->
+
+            <!--<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">-->
+            <!--<span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span>-->
+            <!--</button> <a class="navbar-brand" href="http://www.biomarkercenter.org/">BiomarkerCenter</a>-->
+            <!--</div>-->
+
+            <!--<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">-->
+            <!--<ul class="nav navbar-nav">-->
+            <!--<li class="active">-->
+            <!--<a href="/glycosites/">Home</a>-->
+            <!--</li>-->
+            <!--&lt;!&ndash;-->
+            <!--<li>-->
+            <!--<a id="advanced" href="#">Search</a>-->
+            <!--</li>-->
+            <!--<li>-->
+            <!--<a href="#">Download</a>-->
+            <!--</li>-->
+            <!--&ndash;&gt;-->
+            <!--</ul>-->
+
+            <!--&lt;!&ndash;<ul class="nav navbar-nav navbar-right">&ndash;&gt;-->
+            <!--&lt;!&ndash;<li>&ndash;&gt;-->
+            <!--&lt;!&ndash;<a href="#"></a>&ndash;&gt;-->
+            <!--&lt;!&ndash;</li>&ndash;&gt;-->
+            <!--&lt;!&ndash;<li class="dropdown">&ndash;&gt;-->
+            <!--&lt;!&ndash;<a href="#" class="dropdown-toggle" data-toggle="dropdown">Help<strong class="caret"></strong></a>&ndash;&gt;-->
+            <!--&lt;!&ndash;<ul class="dropdown-menu">&ndash;&gt;-->
+            <!--&lt;!&ndash;<li>&ndash;&gt;-->
+            <!--&lt;!&ndash;<a href="#">Documentation</a>&ndash;&gt;-->
+            <!--&lt;!&ndash;</li>&ndash;&gt;-->
+            <!--&lt;!&ndash;<li>&ndash;&gt;-->
+            <!--&lt;!&ndash;<a href="#"></a>&ndash;&gt;-->
+            <!--&lt;!&ndash;</li>&ndash;&gt;-->
+            <!--&lt;!&ndash;<li>&ndash;&gt;-->
+            <!--&lt;!&ndash;<a href="#">Publication</a>&ndash;&gt;-->
+            <!--&lt;!&ndash;</li>&ndash;&gt;-->
+            <!--&lt;!&ndash;<li class="divider">&ndash;&gt;-->
+            <!--&lt;!&ndash;</li>&ndash;&gt;-->
+            <!--&lt;!&ndash;<li>&ndash;&gt;-->
+            <!--&lt;!&ndash;<a href="#">Registration</a>&ndash;&gt;-->
+            <!--&lt;!&ndash;</li>&ndash;&gt;-->
+            <!--&lt;!&ndash;</ul>&ndash;&gt;-->
+            <!--&lt;!&ndash;</li>&ndash;&gt;-->
+            <!--&lt;!&ndash;</ul>&ndash;&gt;-->
+            <!--&lt;!&ndash;-->
+            <!--<ul class="nav navbar-nav navbar-right">-->
+            <!--<form class="navbar-form navbar-right" role="search">-->
+            <!--<div class="form-group">-->
+            <!--<input class="form-control" type="text">-->
+            <!--</div>-->
+            <!--<button type="submit" class="btn btn-default">-->
+            <!--Search-->
+            <!--</button>-->
+            <!--</form>-->
+            <!--<li>-->
+            <!--<a id="advanced" href="#">Advanced</a>-->
+            <!--</li>-->
+            <!--</ul>-->
+            <!--&ndash;&gt;-->
+            <!--</div>-->
+
+            <!--</nav>-->
+        </div>
+    </div>
+    <table id="table_id" class="display" align="center">
+        <thead>
+        <tr align="center">
+            <th align="center">UniProt Accession</th>
+            <!--
+            <th>Reviewed</th>
+            -->
+            <th align="center">Gene Names</th>
+            <th align="center"> Protein Names</th>
+            <th align="center">Glycosites</th>
+            <!--
+            <th>N-Glycopeptides</th>
+            <th>Glycosites_+/-20AAs</th>
+            <th>Identification Resources</th>
+            <th>Years</th>
+            <th>References</th>
+            -->
+        </tr>
+        </thead>
+        <tbody>
+        {% if latest_accession_list %}
+
+            {% for accession in latest_accession_list %}
+                <tr>
+                    <td align="center"><a href="/glycosites/{{ accession.id }}/">{{ accession.accession_uniprotkb }}</a>
+                    </td>
+                    <!--
+            <td>{{accession.database}}</td>
+            -->
+                    <td align="center">{{ accession.gene_names }}</td>
+                    <td align="center">{{ accession.protein_names }}</td>
+                    <td align="center">{{ accession.glycosylation_location_string }}</td>
+                    <!--
+            <td>{{accession.glycosites_containing_peptides}}</td>
+            <td>{{accession.glycosite_aas}}</td>
+            <td>{{accession.identification_resources}}</td>
+            <td>{{accession.years}}</td>
+            <td>{{accession.references}}</td>
+            -->
+                </tr>
+            {% endfor %}
+        {% else %}
+            <tr>
+                <td>NULL</td>
+                <td>NULL</td>
+            </tr>
+        {% endif %}
+        {% if invaliduser %}
+            <h2>Only first 50 results are shown for anonymous search. Please Log in to see all.</h2>
+        {% endif %}
+        </tbody>
+    </table>
+</div>
+</body>
+</html>
