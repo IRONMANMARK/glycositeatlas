@@ -14,11 +14,10 @@ def neutralLoss():
             'T': [18.010565],
             'Z': [18.010565, 17.026549, 43.98982, 45.02146, 46.00548]}
     return loss
-def get_mass(filename='param_default.txt'):
+def get_mass(filename='param_default.txt', result_dic={'Z' : 0}):
     file = open(filename)
     data_matrix = []
     sub_data = []
-    result_dic = {}
     for line in file:
         if line == '\n':
             data_matrix.append(sub_data)
@@ -55,7 +54,7 @@ def read_file(filename):
                     rawsequence = queue.popleft()
                     rawsequence = rawsequence.split('/')
                     charge = int(rawsequence[1])
-                    print(rawsequence[0], charge)
+                    # print(rawsequence[0], charge)
                     modification = ''
                     count = 0
                     modification_dic = {}
@@ -69,17 +68,21 @@ def read_file(filename):
                             modification = ''
                         else:
                             count += 1
-                    print(modification_dic)
+                    # print(modification_dic)
                     sequence = ''.join(pattern.findall(rawsequence[0]))
                     length = len(sequence)
                     combination = []
                     for i in range(1, length):
                         combination.append([sequence[0:i], sequence[i:length], i, length - i])
                     # print(sequence)
-                    print(np.mat(combination))
+                    # print(np.mat(combination))
                     # print(mass_dic)
-                    calculate_ion(data_matrix, combination, charge, mass_dic, modification_dic)
-                    break
+                    result = calculate_ion(data_matrix, combination, charge, mass_dic, modification_dic)
+                    print(np.mat(result))
+                    ###########################################
+                    #   get the result for each mass spectrum #
+                    #   put next step here                    #
+                    ###########################################
                 else:
                     pass
                 data_matrix = []
@@ -90,8 +93,8 @@ def calculate_ion(data_matrix, combination, charge, mass_dic, modification_dic, 
     cal = calculator(combination, charge, mass_dic, modification_dic)
     b_theoretical = cal.get_all_result().get('b')
     y_theoretical = cal.get_all_result().get('y')
-    print(y_theoretical)
-    print(b_theoretical)
+    # print(y_theoretical)
+    # print(b_theoretical)
     result = []
     count = 0
     for data in data_matrix:
@@ -109,7 +112,8 @@ def calculate_ion(data_matrix, combination, charge, mass_dic, modification_dic, 
                 else:
                     pass
         result.append([data, sub_result])
-        print(data, sub_result)
+    return result
+        # print(data, sub_result)
     # for i in data_matrix:
     #     print(b_theoretical.get(round(i[0], 2)))
 
@@ -229,9 +233,30 @@ class calculator(object):
                 pass
         return {'b': b_theoretical, 'y': y_theoretical}
 
+def get_modification(filename='param_default.txt', key="mod"):
+    file = open(filename)
+    data_matrix = []
+    sub_data = []
+    result_dic = {}
+    for line in file:
+        if line == '\n':
+            data_matrix.append(sub_data)
+            sub_data = []
+        else:
+            sub_data.append(line)
+    data_matrix.append(sub_data)
+    for data in data_matrix:
+        if data[0] == '@mass\n':
+            for i in data:
+                i = i.strip('\n').split(',')
+                b = i[0].split(' = ')
+                if b[0] == key:
+                    result_dic[b[1]] = float(i[1])
+    return result_dic
 
 
 
 if __name__ == "__main__":
     filename = "TripleTof_Glycosites.sptxt"
     read_file(filename)
+    # print(generate_pic.pre_process("data2", file_type2="csv"))
