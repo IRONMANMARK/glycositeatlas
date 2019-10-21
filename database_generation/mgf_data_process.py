@@ -231,25 +231,37 @@ def normalization(vector):
 
 
 def plot_main(plot_list):
-    after = sorted(plot_list, key=lambda itt: itt[0])
-    # print(np.mat(after)
-    for i in [0, int(len(after) / 2), -1]:
-        # print(after[i])
-        lower1 = after[i][1][0]
-        lower2 = np.negative(after[i][1][1])
-        plt.figure(figsize=(20, 10))
-        plt.bar(range(len(lower1)), lower1, fc='y', width=5)
-        plt.bar(range(len(lower2)), lower2, fc='r', width=5)
-        plt.xlim(0, 1200)
-        # pd.DataFrame([lower1,lower2]).to_csv('%s.xls' % i)
-        # print(lower1.tolist())
-        # print(lower2.tolist())
-        plt.ylim(min(lower2), max(lower1))
-        plt.xlabel("m/z")
-        plt.ylabel("normalized intensity")
-        plot_label(after[i], max(lower1), plt)
+    # after = sorted(plot_list, key=lambda itt: itt[0])
+    after = np.mat(plot_list)[:, 0]
+    after_list = after.tolist()
+    max_index = np.argmax(after)
+    min_index = np.argmin(after)
+    median = np.argwhere(after == np.median(after))[0][1]
+    index = [max_index, min_index, median]
+    # print(np.mat(plot_list)[:, 0])
+    # # print(np.mat(after)
+    # print(index)
+    for i in index:
+        try:
+            lower1 = plot_list[i][1][0]
+            lower2 = np.negative(plot_list[i][1][1])
+            plt.figure(figsize=(20, 10))
+            plt.bar(range(len(lower1)), lower1, fc='y', width=5)
+            plt.bar(range(len(lower2)), lower2, fc='r', width=5)
+            plt.xlim(0, 1200)
+            # pd.DataFrame([lower1,lower2]).to_csv('%s.xls' % i)
+            # print(lower1.tolist())
+            # print(lower2.tolist())
+            plt.ylim(min(lower2), max(lower1))
+            plt.xlabel("m/z")
+            plt.ylabel("normalized intensity")
+            plot_label(plot_list[i], max(lower1), plt)
+            # plt.show()
+            plt.close('all')
+        except:
+            pass
         # plt.show()
-    matrix = np.mat(after)
+    # matrix = np.mat(after)
     # mean = np.mean(matrix[:, 0])
     # print(np.transpose(matrix[:, 0]))
     # median = np.median(np.transpose(matrix[:, 0]).tolist()[0])
@@ -257,10 +269,13 @@ def plot_main(plot_list):
 
 
 def plot_label(sub_item, max_upper, plot_object, dir='pic'):
+    # print(sub_item)
     plot_object.title("%s" % sub_item[2])
     plot_object.text(1205, max_upper / 2, "score:%s\nscan:%s\n         %s\nglycan:%s" %
                      (sub_item[0], sub_item[3][0], sub_item[3][1], sub_item[4]))
-    plot_object.savefig(dir + '/' + "%s.png" % (sub_item[2] + str(round(sub_item[0], 4)).split('.')[1]))
+    plot_object.savefig(dir + '/' + "%s.png" %
+                        (sub_item[2] + str(sub_item[5]) + ''.join(sub_item[4].split(":")) +
+                         str(round(sub_item[0], 4)).split('.')[1]))
 
 
 if __name__ == "__main__":

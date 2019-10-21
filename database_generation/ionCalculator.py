@@ -2,6 +2,7 @@ from collections import deque
 import re
 import numpy as np
 
+
 def neutralLoss():
     loss = {'B': [18.010565, 17.026549, 43.98982, 45.02146, 46.00548],
             'D': [18.010565, 43.98982, 46.00548],
@@ -14,7 +15,9 @@ def neutralLoss():
             'T': [18.010565],
             'Z': [18.010565, 17.026549, 43.98982, 45.02146, 46.00548]}
     return loss
-def get_mass(filename='param_default.txt', result_dic={'Z' : 0}):
+
+
+def get_mass(filename='param_default.txt', result_dic={'Z': 0}):
     file = open(filename)
     data_matrix = []
     sub_data = []
@@ -33,6 +36,8 @@ def get_mass(filename='param_default.txt', result_dic={'Z' : 0}):
                 if b[0] == 'aa':
                     result_dic[b[1]] = float(i[1])
     return result_dic
+
+
 def read_file(filename):
     data_matrix = []
     queue = deque([])
@@ -68,8 +73,9 @@ def read_file(filename):
                             modification = ''
                         else:
                             count += 1
-                    # print(modification_dic)
+                    print(modification_dic)
                     sequence = ''.join(pattern.findall(rawsequence[0]))
+                    print(sequence)
                     length = len(sequence)
                     combination = []
                     for i in range(1, length):
@@ -77,8 +83,11 @@ def read_file(filename):
                     # print(sequence)
                     # print(np.mat(combination))
                     # print(mass_dic)
+                    print(data_matrix, type(data_matrix))
+                    print(modification_dic)
                     result = calculate_ion(data_matrix, combination, charge, mass_dic, modification_dic)
-                    print(np.mat(result))
+                    # print(np.mat(result))
+                    break
                     ###########################################
                     #   get the result for each mass spectrum #
                     #   put next step here                    #
@@ -88,6 +97,7 @@ def read_file(filename):
                 data_matrix = []
             else:
                 pass
+
 
 def calculate_ion(data_matrix, combination, charge, mass_dic, modification_dic, tolerence=1):
     cal = calculator(combination, charge, mass_dic, modification_dic)
@@ -102,10 +112,10 @@ def calculate_ion(data_matrix, combination, charge, mass_dic, modification_dic, 
         sub_result = []
         for key in b_theoretical:
             for sub_key in b_theoretical[key]:
-               if abs(sub_key - data[0]) <= tolerence:
-                   sub_result.append(b_theoretical[key][sub_key])
-               else:
-                   pass
+                if abs(sub_key - data[0]) <= tolerence:
+                    sub_result.append(b_theoretical[key][sub_key])
+                else:
+                    pass
             for sub_key_y in y_theoretical[key]:
                 if abs(sub_key_y - data[0]) <= tolerence:
                     sub_result.append(y_theoretical[key][sub_key_y])
@@ -113,19 +123,19 @@ def calculate_ion(data_matrix, combination, charge, mass_dic, modification_dic, 
                     pass
         result.append([data, sub_result])
     return result
-        # print(data, sub_result)
+    # print(data, sub_result)
     # for i in data_matrix:
     #     print(b_theoretical.get(round(i[0], 2)))
 
 
-
 class calculator(object):
-    def __init__(self, item, charge, mass_dic, modification_dic, calculate_neutral_loss=True):
+    def __init__(self, item, charge, mass_dic, modification_dic, calculate_neutral_loss=False):
         self.item = item
         self.charge = charge
         self.mass_dic = mass_dic
         self.modificaiton_dic = modification_dic
         self.calculate_neutralLoss = calculate_neutral_loss
+
     def calculate_b(self, sub_item, b_charge, loss):
         if self.calculate_neutralLoss is True:
             M_total = -loss
@@ -150,6 +160,7 @@ class calculator(object):
             else:
                 b_mz = 0
         return b_mz
+
     def calculate_y(self, sub_item, y_charge, loss, C=17.00734, h=1.00794):
         if self.calculate_neutralLoss is True:
             M_total = -loss
@@ -174,6 +185,7 @@ class calculator(object):
             else:
                 y_mz = 0
         return y_mz
+
     def get_all_result(self):
         b_theoretical = {}
         y_theoretical = {}
@@ -208,14 +220,16 @@ class calculator(object):
                         if loss == 0:
                             b_sub_theoretical[b_mz] = 'b' + str(i[2]) + '^' + str(b_charge)
                         else:
-                            b_sub_theoretical[b_mz] = 'b' + str(i[2]) + '-' + str(int(round(loss, 0))) + '^' + str(b_charge)
+                            b_sub_theoretical[b_mz] = 'b' + str(i[2]) + '-' + str(int(round(loss, 0))) + '^' + str(
+                                b_charge)
                     for loss in loss_set_y:
                         y_mz = calculator.calculate_y(self, i, y_charge, loss)
                         y_mz = round(y_mz, 2)
                         if loss == 0:
                             y_sub_theoretical[y_mz] = 'y' + str(i[3]) + '^' + str(y_charge)
                         else:
-                            y_sub_theoretical[y_mz] = 'y' + str(i[3]) + '-' + str(int(round(loss, 0))) + '^' + str(y_charge)
+                            y_sub_theoretical[y_mz] = 'y' + str(i[3]) + '-' + str(int(round(loss, 0))) + '^' + str(
+                                y_charge)
                 else:
                     b_mz = calculator.calculate_b(self, i, b_charge, loss_set_b)
                     y_mz = calculator.calculate_y(self, i, y_charge, loss_set_y)
@@ -233,6 +247,7 @@ class calculator(object):
                 pass
         return {'b': b_theoretical, 'y': y_theoretical}
 
+
 def get_modification(filename='param_default.txt', key="mod"):
     file = open(filename)
     data_matrix = []
@@ -247,13 +262,14 @@ def get_modification(filename='param_default.txt', key="mod"):
     data_matrix.append(sub_data)
     for data in data_matrix:
         if data[0] == '@mass\n':
-            for i in data:
-                i = i.strip('\n').split(',')
-                b = i[0].split(' = ')
+            for i in range(len(data)):
+                iii = data[i].strip('\n').split(',')
+                b = iii[0].split(' = ')
+                j = data[i - 1].strip('\n').strip('# ').split(':')
                 if b[0] == key:
-                    result_dic[b[1]] = float(i[1])
+                    final_key = j[1].strip(' ')
+                    result_dic[final_key] = float(iii[1])
     return result_dic
-
 
 
 if __name__ == "__main__":
